@@ -1,0 +1,8 @@
+# Local development artifacts
+gameplay.png
+preview.png
+victory.png
+verify.cjs
+node_modules/
+.DS_Store
+Thumbs.db

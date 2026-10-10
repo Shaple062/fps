@@ -1,0 +1,7 @@
+// Large, brief explosion: visual radius 25m, shared geometry and automatic disposal.
+window.FPSBlast=class{
+ constructor(T,scene){this.T=T;this.scene=scene;this.effects=[];}
+ add(point){const T=this.T,root=new T.Group();root.position.copy(point);const sphere=new T.Mesh(new T.SphereGeometry(1,24,16),new T.MeshBasicMaterial({color:0xffc65e,transparent:true,opacity:.35,depthWrite:false,side:T.DoubleSide}));const ring=new T.Mesh(new T.TorusGeometry(1,.025,6,64),new T.MeshBasicMaterial({color:0xffe6a0,transparent:true,depthWrite:false}));ring.rotation.x=Math.PI/2;root.add(sphere,ring);for(let i=0;i<12;i++){const spark=new T.Mesh(new T.SphereGeometry(.2,6,4),new T.MeshBasicMaterial({color:0xff9754,transparent:true,depthWrite:false}));spark.userData.velocity=new T.Vector3(Math.cos(i*2.4)*14,8+i%5,Math.sin(i*2.4)*14);root.add(spark);}this.scene.add(root);this.effects.push({root,sphere,ring,age:0});}
+ update(dt){for(let i=this.effects.length-1;i>=0;i--){const e=this.effects[i];e.age+=dt;const t=e.age;e.sphere.scale.setScalar(.5+Math.min(1,t/.45)*25);e.sphere.material.opacity=Math.max(0,.35*(1-t/.7));e.ring.scale.setScalar(1+Math.min(1,t/.65)*24);e.ring.material.opacity=Math.max(0,1-t/1.4);e.root.children.slice(2).forEach(s=>{s.position.copy(s.userData.velocity).multiplyScalar(t);s.position.y-=5*t*t;s.material.opacity=Math.max(0,1-t/1.6);});if(t>1.6){this.scene.remove(e.root);e.root.traverse(o=>{o.geometry?.dispose();o.material?.dispose();});this.effects.splice(i,1);}}}
+};
+

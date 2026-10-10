@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>鎌倉高校前 · COASTAL / FPS</title>
+<style>
+:root{color-scheme:dark;--lime:#c1ed87;--muted:#a3b7b2}*{box-sizing:border-box}body{margin:0;background:#0c1517;color:#eff5ee;font:14px 'Segoe UI','Microsoft JhengHei',sans-serif;overflow:hidden}canvas{display:block;width:100vw;height:100vh}button{font:inherit;cursor:pointer;border:0}.hud{position:fixed;inset:0;pointer-events:none;padding:30px 36px;background:linear-gradient(180deg,rgba(7,15,17,.55),transparent 22%,transparent 75%,rgba(7,15,17,.7))}.top{display:flex;justify-content:space-between;align-items:flex-start}.brand{letter-spacing:4px;font-size:12px;color:var(--lime)}.brand b{display:block;color:white;font-size:24px;letter-spacing:2px;margin-top:7px}.mission{text-align:right;color:var(--muted);letter-spacing:2px;font-size:11px}.mission strong{display:block;color:#edf4eb;font-size:16px;letter-spacing:0;margin-top:8px}.badge{display:inline-block;border:1px solid #53724d;color:var(--lime);padding:6px 10px;border-radius:3px;margin-bottom:8px}.bottom{position:absolute;bottom:30px;left:36px;right:36px;display:flex;justify-content:space-between;align-items:end}.label{font-size:10px;letter-spacing:2px;color:var(--muted)}.health{font-size:36px;font-weight:600;line-height:1.3}.bar{width:190px;height:4px;background:#34433f;margin-top:7px}.bar i{display:block;height:100%;background:var(--lime);width:100%;transition:width .2s}.ammo{text-align:right}.ammo b{font-size:46px;line-height:1.2}.ammo span{font-size:18px;color:var(--muted)}.help{position:absolute;bottom:36px;left:50%;transform:translateX(-50%);color:#b9c9c2;font-size:11px;white-space:nowrap;letter-spacing:1px}.cross{position:fixed;top:50%;left:50%;width:22px;height:22px;transform:translate(-50%,-50%);pointer-events:none}.cross:before,.cross:after{content:'';position:absolute;background:#d6f1c0;box-shadow:0 0 3px #000}.cross:before{width:2px;height:22px;left:10px}.cross:after{height:2px;width:22px;top:10px}.cross.hit{transform:translate(-50%,-50%) rotate(45deg);filter:brightness(2)}#hit-directions{position:fixed;inset:0;pointer-events:none;z-index:4}.hit-direction{position:absolute;left:50%;top:50%;width:0;height:0}.hit-direction i{display:block;position:absolute;left:-16px;top:-105px;width:0;height:0;border-left:16px solid transparent;border-right:16px solid transparent;border-bottom:31px solid #ff2525;filter:drop-shadow(0 0 2px #210000) drop-shadow(0 0 8px #ff3434)}#notice{position:fixed;top:22%;left:50%;transform:translateX(-50%);color:var(--lime);font-size:13px;letter-spacing:2px;text-align:center}#debug{position:fixed;left:36px;top:130px;white-space:pre;font:12px monospace;color:var(--lime);background:#081312bc;padding:12px;display:none}#errors{position:fixed;left:24px;bottom:110px;max-width:440px;max-height:160px;overflow:auto;background:#391d19df;color:#ffccbb;font:12px monospace;border-left:3px solid #ec795d;z-index:8;padding:10px;display:none;white-space:pre-wrap}.overlay{position:fixed;inset:0;display:grid;place-items:center;background:radial-gradient(ellipse at 70% 40%,#26463833,#071114cf);z-index:5;padding:24px}.panel{max-height:94vh;overflow:auto;width:min(650px,100%);padding:40px;border:1px solid #67866d59;background:#0d1b1be6;box-shadow:0 30px 90px #0008;border-radius:8px}.eyebrow{color:var(--lime);letter-spacing:4px;font-size:11px}.panel h1{font-size:52px;font-weight:600;line-height:1.1;margin:18px 0 8px;letter-spacing:-1px}.panel h1 small{display:block;font-size:16px;letter-spacing:8px;color:var(--muted);margin-top:14px}.panel p{color:#b2c3bb;line-height:1.9;margin:23px 0}.controls{display:grid;grid-template-columns:1fr 1fr;gap:12px;font-size:12px;color:#b1c2ba;margin:24px 0}.controls b{color:white;margin-right:12px}.primary{width:100%;background:var(--lime);color:#142016;font-weight:700;padding:16px;border-radius:3px;letter-spacing:2px}.primary:hover{background:#d6f7a9}.primary:disabled{opacity:.4;cursor:wait}.foot{font-size:10px!important;letter-spacing:1px;text-align:center;margin:18px 0 0!important;color:#728b80!important}@media(max-width:650px){.hud{padding:18px}.bottom{left:18px;right:18px}.help{display:none}.panel{padding:25px}.panel h1{font-size:38px}.mission{max-width:150px}}
+.hit-direction b{position:absolute;left:-5px;top:-68px;width:10px;height:10px;background:#ff2525;border:1px solid #fff1e8;border-radius:50%;box-shadow:0 0 8px #c00000}#hit-feedback{position:fixed;left:50%;top:calc(50% + 58px);transform:translateX(-50%);color:#ff3838;font-weight:800;font-size:18px;text-shadow:0 1px 3px #200,0 0 8px #fff6;pointer-events:none;z-index:4;opacity:0;white-space:nowrap}.overlay{background:radial-gradient(ellipse at 80% 15%,#7ac8df28,transparent 55%),linear-gradient(135deg,#061a2ecc,#123c42bb);backdrop-filter:blur(5px)}.panel{border-radius:24px;background:linear-gradient(145deg,#183d48ed,#101f30ed);border-color:#b3d9da55;box-shadow:0 30px 100px #00131aaa}.panel h1{color:#f4f4df}.primary{border-radius:12px;background:linear-gradient(110deg,#c1ed87,#8dd9d2);transition:filter .2s,transform .2s}.primary:hover{filter:brightness(1.12);transform:translateY(-1px)}.control-help{padding:12px 0;margin:16px 0;color:#a6c7d0;border-top:1px solid #7db1ba33}.control-help summary{cursor:pointer}.bar{height:6px;border-radius:8px;overflow:hidden}.badge{border-radius:20px}.help{max-width:62vw;overflow:hidden;text-overflow:ellipsis;opacity:.8}.panel p{font-size:13px}.panel .eyebrow{color:#95ddd5}
+</style></head>
+<body>
+<div class="hud"><div class="top"><div class="brand">ENODEN / COASTAL OPERATIONS<b>鎌倉高校前</b></div><div class="mission"><div class="badge">LOCAL · OFFLINE</div><div>KAMAKURA COAST / EN08</div><strong id="objective">消滅敵方哨兵　0 / 12</strong></div></div><div class="bottom"><div><div class="label">VITALS / 生命</div><div class="health" id="hp">100</div><div class="bar"><i id="hpbar"></i></div></div><div class="ammo"><div class="label">AR-07 / 突擊步槍</div><b id="ammo">24</b><span> / ∞</span></div></div><div class="help">WASD 移動　 SHIFT 奔跑　 SPACE 跳躍　 R 換彈　 V 視角　 E 藥水／採草　 H 餵食　 Q 房門　 1 摸動物　 F 上下車　 X 坐下　 G 騎乘　 B 調試飛行　 ESC 暫停</div></div>
+<div class="cross" id="cross"></div><div id="hit-directions" aria-label="受擊來源方向"></div><div id="hit-feedback" role="status"></div><div id="notice"></div><div id="item-status" style="position:fixed;top:27%;width:100%;text-align:center;color:#d8f6a1;pointer-events:none"></div><div id="debug"></div><div id="errors" role="log"></div>
+<div class="overlay" id="overlay"><div class="panel"><div class="eyebrow">COASTAL LIFE / KAMAKURA</div><h1 id="heading">海風與電車<small>KAMAKURA COAST</small></h1><p id="description">沿著繡球花小路走向平交道，綠米白電車停靠在海邊，遠處是江之島與大片積雲。沿岸探索、搭電車、騎著小動物穿過街道，或坐在海邊釣一條稀有魚。想挑戰時，再去對付紅色標記的機器人。工作坊裝備免費領取。</p><details class="control-help"><summary>操作指南 · 展開按鍵說明</summary><div class="controls"><div><b>WASD</b>移動</div><div><b>滑鼠</b>左鍵射擊 / 右鍵瞄準</div><div><b>SPACE</b>跳躍 / 飛行上升</div><div><b>R</b>換彈</div><div><b>V</b>第一／第三人稱</div><div><b>E</b>喝藥水 / 採青草</div><div><b>H</b>餵食附近動物</div><div><b>1</b>摸摸附近動物</div><div><b>Q</b>開關房門</div><div><b>G</b>上下動物坐騎</div><div><b>F</b>上下電車</div><div><b>X</b>車內坐下 / 站起</div><div><b>M</b>工作坊免費領武器</div><div><b>T</b>釣魚凳坐下 / 站起</div><div><b>1（海邊）</b>魚竿 / 武器</div><div><b>右鍵（魚竿）</b>蓄力，放開拋鉤</div><div><b>左鍵（魚竿）</b>咬鉤判定條收魚</div><div><b>I</b>魚類圖鑑</div><div><b>2 / 3 / 4</b>步槍 / 手槍 / 手榴彈</div><div><b>SHIFT</b>奔跑</div><div><b>B</b>調試 / 自由飛行</div></div></details><button class="primary" id="start" disabled>正在載入本機模組…</button><p class="foot">點擊開始鎖定滑鼠 · ESC 設定／暫停 · 無需伺服器</p></div></div>
+<script>
+'use strict';
+window.FPSModels=Object.create(null);
+const $=id=>document.getElementById(id);
+function report(file,error){const box=$('errors');box.style.display='block';const message=file+'：'+(error?.message||error);box.textContent+=(box.textContent?'\n':'')+message;console.error(message);}
+window.addEventListener('error',e=>report(e.filename||'執行錯誤',e.error||e.message));
+window.addEventListener('unhandledrejection',e=>report('非同步錯誤',e.reason));
+function load(file){return new Promise(resolve=>{const s=document.createElement('script');let done=false;const finish=ok=>{if(done)return;done=true;clearTimeout(timer);resolve(ok);};const timer=setTimeout(()=>{report(file,'載入逾時');finish(false);},10000);s.src=file;s.onload=()=>finish(true);s.onerror=()=>{report(file,'無法載入，請確認檔案存在');finish(false);};document.head.appendChild(s);});}
+(async()=>{
+  await load('vendor/three.min.js');
+  if(!window.THREE){$('start').textContent='Three.js 核心缺失';$('description').textContent='請保留完整遊戲資料夾，包括 vendor/three.min.js，再重新開啟。';return;}
+  await load('scene-layout-station.js');
+  await Promise.all(['models/ground.js','models/wall.js','models/crate.js','models/target.js','models/weapon.js','models/enemy.js','models/effects.js','systems/enemies.js','systems/items.js','systems/weapons.js','systems/characters.js','systems/fish-catalog.js','systems/fishing.js','systems/settings.js','systems/progress.js','systems/blast.js',...(window.FPSLayout?.modelScripts||[])].map(load));
+  try{boot();}catch(e){report('主程式初始化',e);$('start').textContent='啟動失敗，請查看錯誤訊息';}
+})();
+function boot(){
+  const layout=window.FPSLayout&&Array.isArray(FPSLayout.elements)?FPSLayout:{spawn:[0,0,10],patrol:[[-8,0,-8],[8,0,-8]],elements:[]};
+  if(layout!==window.FPSLayout)report('場景布局','使用備用空場景');
+  const T=THREE,env=layout.environment||{},scene=new T.Scene();scene.background=new T.Color(env.background??0x122127);scene.fog=new T.FogExp2(env.background??0x122127,env.fogDensity??.024);
+  const renderer=new T.WebGLRenderer({antialias:true});renderer.setSize(innerWidth,innerHeight);renderer.setPixelRatio(Math.min(devicePixelRatio,1.5));renderer.shadowMap.enabled=true;renderer.shadowMap.type=T.PCFSoftShadowMap;renderer.toneMapping=T.ACESFilmicToneMapping;renderer.toneMappingExposure=env.exposure??1.3;document.body.prepend(renderer.domElement);
+  const camera=new T.PerspectiveCamera(72,innerWidth/innerHeight,.08,env.far||110);camera.rotation.order='YXZ';scene.add(camera);
+  const hemi=env.hemisphere||{};scene.add(new T.HemisphereLight(hemi.sky??0xb3dcdd,hemi.ground??0x344332,hemi.intensity??2));
+  const sun=env.sun||{},moon=new T.DirectionalLight(sun.color??0xc6dfef,sun.intensity??2.3);moon.position.fromArray(sun.position||[-12,24,8]);moon.target.position.set(0,0,8);scene.add(moon.target);moon.castShadow=true;moon.shadow.mapSize.set(2048,2048);Object.assign(moon.shadow.camera,{left:-40,right:40,top:40,bottom:-40,near:1,far:160});moon.shadow.bias=-.0004;moon.shadow.normalBias=.02;scene.add(moon);
+  for(const l of env.pointLights||[]){const light=new T.PointLight(l.color,l.intensity,l.distance,2);light.position.fromArray(l.position);scene.add(light);}
+  try{layout.prepare?.(T);}catch(e){report('路邊植栽布局',e);}
+  const obstacles=[],surfaces=[],roots=[],entries=new Map(),effects=[],keys=new Set(),modelUpdates=[],groundHeights=[];
+  const player={pos:new T.Vector3().fromArray(layout.spawn||[0,0,10]),vy:0,grounded:false,hp:100};
+  let state='ready',locked=false,debug=false,ammo=24,reload=0,shotTimer=0,kills=0,total=0,elapsed=0,visualTime=0,yaw=layout.spawnYaw||0,pitch=layout.spawnPitch||0,trigger=false,aiming=false,recoil=0,hitTimer=0,noticeTimer=0,weapon=null,weaponMuzzle=null,enemySystem=null,frames=0,fps=0,fpsTime=0;
+  const ray=new T.Raycaster(), direction=new T.Vector3();let third=false,avatar=null,items=null,riding=null,mounted=null,rideYaw=0;const interactions=[],vehicles=[],petters=[],shops=[],blastActors=[],bulletScreens=[];let armory=null,characters=null,fishing=null,settings=null,progress=null,blast=null;const weaponViews={};
+  // Synthesized offline sound: no sound files, downloads or additional modules.
+  let audio=null,audioMaster=null,noiseBuffer=null,hitShake=0,hitFeedbackTimer=0,hitKick=1;const reloadVoices=[],hitDirections=[];
+  function unlockAudio(){try{if(!audio){const Audio=window.AudioContext||window.webkitAudioContext;if(!Audio)return;audio=new Audio();audioMaster=audio.createGain();audioMaster.gain.value=.38*(settings?.data.volume??.7);audioMaster.connect(audio.destination);noiseBuffer=audio.createBuffer(1,Math.ceil(audio.sampleRate*.3),audio.sampleRate);const data=noiseBuffer.getChannelData(0);for(let i=0;i<data.length;i++)data[i]=Math.random()*2-1;}if(audio.state==='suspended')audio.resume().catch(e=>report('音效',e));}catch(e){report('音效初始化',e);}}
+  function voice({freq=180,to=60,duration=.12,volume=.25,type='triangle',noise=false,filter=1500,delay=0,pan=0,reloading=false}){
+    if(!audio||audio.state!=='running')return;
+    const source=noise?audio.createBufferSource():audio.createOscillator(),gain=audio.createGain(),tone=audio.createBiquadFilter(),stereo=audio.createStereoPanner();
+    if(noise)source.buffer=noiseBuffer;else{source.type=type;source.frequency.setValueAtTime(freq,audio.currentTime+delay);source.frequency.exponentialRampToValueAtTime(Math.max(20,to),audio.currentTime+delay+duration);}
+    tone.type=noise?'lowpass':'allpass';tone.frequency.value=filter;stereo.pan.value=pan;const at=audio.currentTime+delay;
+    gain.gain.setValueAtTime(0,at);gain.gain.linearRampToValueAtTime(volume,at+.003);gain.gain.exponentialRampToValueAtTime(.0001,at+duration);
+    source.connect(tone);tone.connect(gain);gain.connect(stereo);stereo.connect(audioMaster);source.start(at);source.stop(at+duration+.01);
+    if(reloading)reloadVoices.push(source);source.onended=()=>{source.disconnect();tone.disconnect();gain.disconnect();stereo.disconnect();const i=reloadVoices.indexOf(source);if(i>=0)reloadVoices.splice(i,1);};
+  }
+  function cancelReloadSound(){for(const node of reloadVoices.splice(0))try{node.stop();}catch{}}
+  function sound(kind,position){try{
+    let pan=0,volume=1;if(position){const delta=position.clone().sub(camera.position),distance=delta.length();pan=T.MathUtils.clamp(delta.dot(new T.Vector3(Math.cos(yaw),0,-Math.sin(yaw)))/Math.max(1,distance),-1,1);volume=1/(1+distance*.12);}
+    if(kind==='shot'){voice({noise:true,duration:.11,volume:.5*volume,filter:2300,pan});voice({freq:125,to:42,duration:.15,volume:.32*volume,type:'sawtooth',pan});}
+    else if(kind==='enemy-down'){voice({freq:650,to:240,duration:.17,volume:.25*volume,type:'sine',pan});voice({freq:430,to:100,duration:.25,volume:.23*volume,delay:.08,pan});}
+    else if(kind==='reload'){voice({noise:true,duration:.07,volume:.24,filter:4000,reloading:true});voice({freq:250,to:130,duration:.08,volume:.16,delay:.5,reloading:true});voice({noise:true,duration:.09,volume:.35,filter:3300,delay:1.3,reloading:true});}
+    else if(kind==='melee'){voice({noise:true,duration:.12,volume:.2,filter:600});}
+    else if(kind==='pickup'){voice({freq:520,to:780,duration:.15,volume:.2,type:'sine'});voice({freq:780,to:1040,duration:.18,volume:.2,type:'sine',delay:.12});}
+    else if(kind==='hurt'){voice({noise:true,duration:.07,volume:.42,filter:850});voice({freq:160,to:55,duration:.12,volume:.3,type:'triangle'});}
+    else if(kind==='player-down'){cancelReloadSound();voice({freq:170,to:38,duration:.7,volume:.4,type:'sawtooth'});voice({freq:280,to:70,duration:.6,volume:.24,type:'sine',delay:.12});}
+  }catch(e){report('音效 '+kind,e);}}
+  function hitDirection(source){const node=document.createElement('div');node.className='hit-direction';node.appendChild(document.createElement('i'));const dot=document.createElement('b');node.appendChild(dot);$('hit-directions').appendChild(node);if(hitDirections.length>=6)hitDirections.shift().node.remove();hitDirections.push({node,source:source.clone(),life:2});}
+  let fx=null;try{fx=FPSModels.effects?.(T);}catch(e){report('effects.js',e);}if(!fx)report('effects.js','特效不可用，射擊判定仍繼續');
+  function hud(){ $('hp').textContent=Math.ceil(player.hp);$('hpbar').style.width=player.hp+'%';$('ammo').textContent=ammo;$('objective').textContent=total?'擊倒 '+kills+' 次 · 存活 '+(enemySystem?.units.filter(u=>!u.dead&&!u.failed).length||0)+' / '+total:'練習模式 · 射擊靶子';}
+  function notice(text,seconds=2){$('notice').textContent=text;noticeTimer=seconds;}
+  function segmentBox(start,end,box){if(box.containsPoint(start))return start.clone();const d=end.clone().sub(start),length=d.length();if(!length)return null;const r=new T.Ray(start,d.divideScalar(length)),hit=r.intersectBox(box,new T.Vector3());return hit&&hit.distanceTo(start)<length?hit:null;}
+  function segmentObstacle(start,end,o){const hit=segmentBox(start.clone().applyMatrix4(o.inverse),end.clone().applyMatrix4(o.inverse),o.localBox);return hit?.applyMatrix4(o.matrix);}
+  function clear(start,end){return !obstacles.some(o=>segmentObstacle(start,end,o));}
+  function move(pos,delta,radius,height,stepHeight=.24){
+    const old=pos.clone(),steps=Math.max(1,Math.ceil(delta.length()/.15)),step=delta.clone().divideScalar(steps);let grounded=false;
+    for(let i=0;i<steps;i++){const result=moveStep(pos,step,radius,height,stepHeight);grounded=grounded||result.grounded;}
+    return {grounded,dx:pos.x-old.x,dz:pos.z-old.z};
+  }
+  function moveStep(pos,delta,radius,height,stepHeight){
+    const old=pos.clone();let grounded=false;
+    for(const axis of ['x','z','y']){
+      pos[axis]+=delta[axis];
+      for(const o of obstacles){
+        const b=o.localBox,q=pos.clone().applyMatrix4(o.inverse),previous=old.clone().applyMatrix4(o.inverse);
+        const rx=radius/o.scale.x,rz=radius/o.scale.z,h=height/o.scale.y;
+        if(q.y+h<=b.min.y||q.y>=b.max.y)continue;
+        const closestX=T.MathUtils.clamp(q.x,b.min.x,b.max.x),closestZ=T.MathUtils.clamp(q.z,b.min.z,b.max.z),dx=(q.x-closestX)/rx,dz=(q.z-closestZ)/rz;
+        if(dx*dx+dz*dz>=1)continue;
+        if(axis==='y'){
+          if(delta.y<=0&&previous.y>=b.max.y-.06/o.scale.y){q.y=b.max.y;grounded=true;}else if(delta.y>0&&previous.y+h<=b.min.y+.06/o.scale.y)q.y=b.min.y-h;
+        }else{
+          // Small stairs can raise feet only when the complete body fits above them.
+          if(delta.y<=0&&previous.y<=b.max.y&&b.max.y-previous.y<=stepHeight/o.scale.y){
+            const raised=q.clone();raised.y=b.max.y;const world=raised.applyMatrix4(o.matrix);
+            const blocked=obstacles.some(other=>{if(other===o)return false;const v=world.clone().applyMatrix4(other.inverse),bb=other.localBox,rrx=radius/other.scale.x,rrz=radius/other.scale.z;return v.y+height/other.scale.y>bb.min.y+.001&&v.y<bb.max.y-.001&&Math.pow((v.x-T.MathUtils.clamp(v.x,bb.min.x,bb.max.x))/rrx,2)+Math.pow((v.z-T.MathUtils.clamp(v.z,bb.min.z,bb.max.z))/rrz,2)<1;});
+            if(!blocked){pos.copy(world);grounded=true;continue;}
+          }
+          const distance=Math.hypot(dx,dz);
+          if(distance>1e-8){q.x=closestX+dx/distance*rx;q.z=closestZ+dz/distance*rz;}
+          else{const options=[{axis:'x',v:b.min.x-rx,depth:(q.x-b.min.x+rx)*o.scale.x},{axis:'x',v:b.max.x+rx,depth:(b.max.x-q.x+rx)*o.scale.x},{axis:'z',v:b.min.z-rz,depth:(q.z-b.min.z+rz)*o.scale.z},{axis:'z',v:b.max.z+rz,depth:(b.max.z-q.z+rz)*o.scale.z}];options.sort((a,b)=>a.depth-b.depth);q[options[0].axis]=options[0].v;}
+        }
+        pos.copy(q.applyMatrix4(o.matrix));
+      }
+    }
+    // A safety floor is always present even when the ground module or layout fails.
+    const floor=Math.max(pos.z< -20?-1.2:0,...groundHeights.map(height=>height(pos.x,pos.z)));if(pos.y<=floor){pos.y=floor;grounded=true;}const bounds=layout.bounds||{minX:-23.5,maxX:23.5,minZ:-23.5,maxZ:23.5};pos.x=T.MathUtils.clamp(pos.x,bounds.minX+radius,bounds.maxX-radius);pos.z=T.MathUtils.clamp(pos.z,bounds.minZ+radius,bounds.maxZ-radius);
+    return {grounded,dx:pos.x-old.x,dz:pos.z-old.z};
+  }
+  function disposeEffect(e){scene.remove(e.object);e.object.traverse(o=>{if(o.geometry&&!o.userData.sharedGeometry)o.geometry.dispose();if(o.material){const materials=Array.isArray(o.material)?o.material:[o.material];materials.forEach(m=>m.dispose());}});}
+  function addEffect(object,life,extra={}){if(effects.length>=160)disposeEffect(effects.shift());scene.add(object);effects.push({object,life,max:life,...extra});}
+  function impact(point,normal,color=0xffcf7a){if(!fx)return;const object=fx.impact(color,normal);object.position.copy(point).addScaledVector(normal,.018);addEffect(object,.5,{kind:'impact'});}
+  function tracer(start,end,color,normal=null,impactColor=color){if(!fx)return;
+    const travel=end.clone().sub(start),distance=travel.length();if(distance<.001)return;
+    const object=fx.bullet(color);object.position.copy(start);object.lookAt(end);object.scale.z=Math.min(1,distance/.9);
+    addEffect(object,Math.max(.05,distance/95),{kind:'bullet',start:start.clone(),end:end.clone(),normal:normal?.clone(),impactColor});
+    const flash=fx.flash(color);flash.position.copy(start);flash.lookAt(end);addEffect(flash,.065,{kind:'flash'});
+  }
+  function damage(amount,source){if(state!=='playing'||fishing?.safe)return;if(amount<=0){notice('護盾擋住攻擊',.5);return;}player.hp=Math.max(0,player.hp-amount);if(source)hitDirection(source);hitShake=.24;hitFeedbackTimer=1.6;hitKick=source?Math.sign(source.clone().sub(camera.position).dot(new T.Vector3(Math.cos(yaw),0,-Math.sin(yaw))))||1:1;$('hit-feedback').textContent='受到攻擊  −'+amount+' HP';$('hit-feedback').style.opacity='1';sound('hurt');hud();if(player.hp<=0)beginRespawn();}
+  function enemyFire(start,end,amount=3){const shotDirection=end.clone().sub(start).normalize(),far=start.clone().addScaledVector(shotDirection,70);let point=far,normal=null,nearest=70;
+    scene.updateMatrixWorld(true);
+    sound('shot',start);
+    ray.set(start,shotDirection);ray.far=70;const surfacesHit=ray.intersectObjects(surfaces,true);ray.far=Infinity;
+    if(surfacesHit.length){const hit=surfacesHit[0];point=hit.point;nearest=hit.distance;normal=hit.face?.normal.clone().transformDirection(hit.object.matrixWorld)||shotDirection.clone().negate();}
+    for(const screen of bulletScreens){const blocked=screen.bulletBlock(start,far);if(blocked&&blocked.distanceTo(start)<nearest){point=blocked;nearest=blocked.distanceTo(start);normal=shotDirection.clone().negate();}}
+    const box=new T.Box3(new T.Vector3(player.pos.x-.32,player.pos.y,player.pos.z-.32),new T.Vector3(player.pos.x+.32,player.pos.y+1.8,player.pos.z+.32));const hit=segmentBox(start,far,box);
+    if(hit&&hit.distanceTo(start)<nearest){point=hit;normal=shotDirection.clone().negate();damage(amount,start);}
+    tracer(start,point,0xff946d,normal);
+  }
+  if(window.FPSEnemySystem)try{enemySystem=new FPSEnemySystem(T,{player:()=>player.pos.clone().add(new T.Vector3(0,.9,0)),clear,move,patrol:layout.patrol?.length?layout.patrol:[[-10,0,-10],[10,0,-10]],fire:enemyFire,active:()=>state==='playing',safe:()=>!!fishing?.safe,error:report,respawn:()=>hud(),kill:position=>{sound('enemy-down',position);armory?.earn(25);kills++;hud();notice('哨兵已擊倒');}});}catch(e){report('敵人系統',e);}
+  if(window.FPSItemSystem)try{items=new FPSItemSystem({player,hud,notice,sound,status:$('item-status')});}catch(e){report('道具系統',e);}
+  if(window.FPSCharacterSystem)try{characters=new FPSCharacterSystem({player,hud,notice,sound});}catch(e){report('角色系統',e);}
+  if(FPSModels.player)try{avatar=FPSModels.player(T,characters?.character);scene.add(avatar.root);}catch(e){report('玩家模型',e);}
+  function syncCamera(bob=0){
+    const eye=player.pos.clone().add(new T.Vector3(0,(fishing?.seated?1.3:1.65)+bob,0));camera.rotation.set(pitch,yaw,0);camera.position.copy(eye);
+    if(avatar){avatar.root.position.copy(player.pos);avatar.root.rotation.y=yaw+Math.PI;avatar.root.visible=third;}
+    if(weapon)weapon.visible=!third&&!fishing?.equipped;if(avatar?.held)avatar.held.visible=!fishing?.equipped;
+    if(third){const offset=new T.Vector3(.55,.35,3.2).applyEuler(camera.rotation),desired=eye.clone().add(offset);let distance=offset.length();
+      for(const o of obstacles){if(riding&&o.root===riding.root)continue;const hit=segmentObstacle(eye,desired,o);if(hit)distance=Math.min(distance,Math.max(0,hit.distanceTo(eye)-.2));}
+      camera.position.addScaledVector(offset.normalize(),distance);
+    }
+  }
+  if(window.FPSFishingSystem&&FPSModels.fishingRod)try{fishing=new FPSFishingSystem(T,{scene,camera,player,notice,sound,yaw:()=>yaw,faceSea(){yaw=0;pitch=-.08;},hideGun(){if(weapon)weapon.visible=false;if(avatar?.held)avatar.held.visible=false;},restore(){if(weapon)weapon.visible=!third;if(avatar?.held)avatar.held.visible=true;},pause(){trigger=aiming=false;document.exitPointerLock?.();$('overlay').style.display='none';},resume(){renderer.domElement.requestPointerLock?.();}});}catch(e){report('釣魚系統',e);}
+  for(const entry of layout.elements){try{
+    if(!entry||!entry.id||!Array.isArray(entry.position)||entry.position.length!==3||!entry.position.every(Number.isFinite))throw Error('元素格式或座標無效');
+    const factory=FPSModels[entry.model];if(typeof factory!=='function')throw Error('模型未註冊：'+entry.model);
+    const model=factory(T,entry.params||{});if(!model?.root?.isObject3D)throw Error('建立函式未回傳 root');
+    const root=model.root;root.position.fromArray(entry.position);if(entry.groundSnap&&groundHeights.length)root.position.y=Math.max(...groundHeights.map(height=>height(root.position.x,root.position.z)));if(entry.rotation){if(!entry.rotation.every(Number.isFinite))throw Error('旋轉值無效');root.rotation.fromArray(entry.rotation);}if(entry.scale){if(!entry.scale.every(v=>Number.isFinite(v)&&v>0))throw Error('縮放值無效');root.scale.fromArray(entry.scale);}
+    root.userData.entry=entry;scene.add(root);root.updateMatrixWorld(true);roots.push(root);entries.set(entry.id,root);
+    if(model.blast)blastActors.push(model);if(model.bulletBlock)bulletScreens.push(model);if(model.fishingChairs)fishing?.add(model);if(model.heightAt)groundHeights.push(model.heightAt);model.configure?.({move,player,notice,clear});if(model.shopPosition)shops.push(model);if(model.pet)petters.push(model);if(model.interact)interactions.push(model);if(model.canBoard)vehicles.push(model);
+    if(typeof model.update==='function')modelUpdates.push({id:entry.id,update:model.update,failed:false});
+    if(model.pickup||entry.pickup)items?.add(root,entry.pickup||model.pickup);
+    if(entry.model==='enemy'){if(enemySystem){enemySystem.add(model,entry);total++;}else{root.visible=false;report(entry.id,'敵人系統缺失，略過敵人');}continue;}
+    if(entry.collision){const shapes=entry.colliders||model.colliders||[entry.collider||model.collider];for(const [part,shape]of shapes.entries()){let localBox;
+      if(shape){if(!shape.size?.every(v=>Number.isFinite(v)&&v>0)||!(shape.offset||[0,0,0]).every(Number.isFinite))throw Error('碰撞尺寸無效');localBox=new T.Box3().setFromCenterAndSize(new T.Vector3().fromArray(shape.offset||[0,0,0]),new T.Vector3().fromArray(shape.size));}
+      else{localBox=new T.Box3().setFromObject(root).applyMatrix4(root.matrixWorld.clone().invert());report(entry.id,'模型未提供精確 collider，使用包覆盒');}
+      const matrix=root.matrixWorld.clone(),inverse=matrix.clone().invert(),scale=new T.Vector3().setFromMatrixScale(matrix),box=localBox.clone().applyMatrix4(matrix);
+      if(!Number.isFinite(box.min.x)||box.isEmpty())throw Error('碰撞區域無效');obstacles.push({box,localBox,matrix,inverse,scale,id:entry.id+'#'+part,root:root,dynamic:!!model.dynamic,shape:shape});}}
+    if(entry.collision||entry.shootable)surfaces.push(root);
+  }catch(e){report('布局 '+(entry?.id||'?'),e);const partial=entries.get(entry?.id);if(partial)scene.remove(partial);}}
+  // The weapon is an optional model, never part of the player's collision body.
+  if(FPSModels.weapon)try{for(const kind of ['rifle','pistol','grenade']){const model=FPSModels.weapon(T,{kind});weaponViews[kind]=model;model.root.visible=false;camera.add(model.root);}weapon=weaponViews.rifle.root;weaponMuzzle=weaponViews.rifle.muzzle;weapon.visible=true;}catch(e){report('weapon.js',e);}
+  else report('weapon.js','缺少武器外觀，射擊仍可使用');
+  if(window.FPSWeaponSystem)try{armory=new FPSWeaponSystem(T,{scene,clear,notice,pause(){document.exitPointerLock?.();$('overlay').style.display='none';},resume(){renderer.domElement.requestPointerLock?.();},bought(id,count){if(armory.current===id){ammo=count;hud();}},explode(point){sound('shot',point);try{blast?.add(point);}catch(e){report('爆炸視覺',e);}try{enemySystem?.blast(point,25);}catch(e){report('敵人爆炸判定',e);}for(const model of blastActors)try{model.blast(point,25);}catch(e){report('爆炸角色效果',e);}}});}catch(e){report('武器商城',e);}
+  function selectWeapon(id){if(fishing?.equipped){fishing.equipped=false;fishing.state="idle";fishing.float.visible=fishing.line.visible=false;fishing.text("");}const spec=armory?.select(id,ammo);if(!spec)return;reload=0;cancelReloadSound();ammo=spec.ammo;if(weaponViews[id]){weapon.visible=false;weapon=weaponViews[id].root;weaponMuzzle=weaponViews[id].muzzle;weapon.visible=!third;}if(avatar&&FPSModels.weapon){if(avatar.held){avatar.root.remove(avatar.held);avatar.held.traverse(o=>{o.geometry?.dispose();o.material?.dispose();});}const held=FPSModels.weapon(T,{kind:id}).root;held.position.set(.29,1.04,.25);held.rotation.y=Math.PI;held.scale.setScalar(1);avatar.root.add(held);avatar.held=held;}hud();notice(spec.name);}
+  const boxes=new T.Group();scene.add(boxes);
+  function wire(box,color){const helper=new T.Box3Helper(box,color);helper.material.depthTest=false;helper.material.transparent=true;helper.material.opacity=.8;helper.renderOrder=10;return helper;}
+  for(const o of obstacles){const group=new T.Group();group.matrixAutoUpdate=false;group.matrix=o.matrix;group.add(wire(o.localBox,0xc8ed83));boxes.add(group);}
+
+  const enemyWires=(enemySystem?.units||[]).map(u=>{const box=new T.Box3(),helper=wire(box,0xff9766);boxes.add(helper);return {u,box,helper};});boxes.visible=false;
+  function restart(){fishing?.leave();if(characters){characters.reset();if(avatar){scene.remove(avatar.root);avatar.root.traverse(o=>{o.geometry?.dispose();o.material?.dispose();});}try{avatar=FPSModels.player(T,characters.character);scene.add(avatar.root);}catch(e){report('角色模型',e);avatar=null;}}riding=null;mounted?.release();mounted=null;hitShake=hitFeedbackTimer=0;camera.rotation.z=0;cancelReloadSound();hitDirections.forEach(h=>h.node.remove());hitDirections.length=0;player.pos.fromArray(layout.spawn||[0,0,10]);player.hp=100;player.vy=0;ammo=24;reload=0;kills=0;elapsed=0;yaw=layout.spawnYaw||0;pitch=layout.spawnPitch||0;debug=false;boxes.visible=false;$('debug').style.display='none';for(const e of effects)disposeEffect(e);effects.length=0;enemySystem?.reset();items?.reset();armory?.reset();if(armory){const id="rifle";armory.catalog[id].owned=true;selectWeapon(id);}state='playing';progress?.restore();syncCamera();hud();}
+  let respawnTimer=0;
+  function beginRespawn(){state='respawning';respawnTimer=3;trigger=aiming=false;reload=0;cancelReloadSound();sound('player-down');$('overlay').style.display='grid';$('heading').textContent='準備重生';$('description').textContent='3 秒後回到海岸出生點，裝備與場景進度保留。';$('start').disabled=true;}
+  function revivePlayer(){fishing?.leave();mounted?.release();mounted=null;riding=null;player.pos.fromArray(layout.spawn);player.hp=100;player.vy=0;player.grounded=false;yaw=layout.spawnYaw||0;pitch=layout.spawnPitch||0;debug=false;boxes.visible=false;$('debug').style.display='none';hitShake=hitFeedbackTimer=0;hitDirections.forEach(h=>h.node.remove());hitDirections.length=0;keys.clear();trigger=aiming=false;shotTimer=0;state='playing';$('start').disabled=false;$('start').textContent='繼續行動 →';if(locked)$('overlay').style.display='none';else{$('heading').textContent='已重生';$('description').textContent='點擊繼續，返回海岸。';}syncCamera();hud();notice('已重生 · 生命 100');}
+  function end(won){if(state==='dead'||state==='won')return;state=won?'won':'dead';characters?.choose();if(!won)sound('player-down');else cancelReloadSound();trigger=false;document.exitPointerLock?.();$('heading').textContent=won?'區域已清除':'任務中斷';$('description').textContent=won?'全部哨兵已擊倒。完成時間 '+Math.floor(elapsed)+' 秒。可重新開始挑戰。':'你已被擊倒。利用牆壁與箱子阻擋敵人的射擊，換彈時尋找掩體。';$('start').textContent='重新開始';$('overlay').style.display='grid';}
+  function shoot(){if(fishing?.equipped||fishing?.seated)return;if(state!=='playing'||!locked||reload>0||shotTimer>0)return;if(ammo<=0&&!armory?.spec.melee){beginReload();return;}if(!armory?.spec.melee)ammo--;if(armory)armory.spec.ammo=ammo;shotTimer=armory?.spec.interval||.14;recoil=1;sound(armory?.spec.melee?'melee':'shot');hud();
+    syncCamera();scene.updateMatrixWorld(true);ray.setFromCamera(new T.Vector2(0,0),camera);
+        if(armory?.current==='grenade'){const start=player.pos.clone().add(new T.Vector3(0,1.5,0));armory.throw(start,ray.ray.direction);trigger=false;return;}
+    const candidates=surfaces.concat(enemySystem?.units.filter(u=>!u.dead&&!u.failed).map(u=>u.model.root)||[]);ray.far=armory?.spec.melee?3:Infinity;let hits=ray.intersectObjects(candidates,true);ray.far=Infinity;const aimPoint=hits.length?hits[0].point.clone():ray.ray.at(70,new T.Vector3());
+    let start=third?player.pos.clone().add(new T.Vector3(0,1.3,0)):(weaponMuzzle?weaponMuzzle.getWorldPosition(new T.Vector3()):camera.position.clone());
+    // The screen-center ray alone determines damage. Gun recoil/offset only affects visuals.
+    // Keep the tracer in front of the target even when it is closer than the muzzle.
+    if(start.clone().sub(camera.position).dot(ray.ray.direction)>=aimPoint.clone().sub(camera.position).dot(ray.ray.direction))start=camera.position.clone();
+    let blockedMuzzle=null,blockedDistance=Infinity;for(const o of obstacles){const h=segmentObstacle(camera.position,start,o);if(h&&h.distanceTo(camera.position)<blockedDistance){blockedMuzzle=h;blockedDistance=h.distanceTo(camera.position);}}
+    if(blockedMuzzle){tracer(camera.position,blockedMuzzle,0xcbea97,direction.copy(camera.position).sub(blockedMuzzle).normalize());return;}
+    direction.copy(aimPoint).sub(start).normalize();
+    if(third){ray.set(start,direction);ray.far=armory?.spec.melee?3:start.distanceTo(aimPoint)+.01;hits=ray.intersectObjects(candidates,true);ray.far=Infinity;}
+    const endPoint=hits.length?hits[0].point:aimPoint;let normal=null,impactColor=0xffd594;
+    if(hits.length){const hit=hits[0];normal=hit.face?.normal.clone().transformDirection(hit.object.matrixWorld)||direction.clone().negate();let root=hit.object;while(root.parent&&!root.userData.entry)root=root.parent;const entry=root.userData.entry;
+      if(entry?.model==='enemy'){enemySystem?.hit(root,(armory?.spec.damage||34));hitTimer=.15;impactColor=0x98ffe6;}else if(entry?.shootable){hitTimer=.15;notice('命中靶心',.7);}}
+    if(armory?.spec.melee){if(hits.length)impact(endPoint,normal,impactColor);}else tracer(start,endPoint,0xd8f6a1,normal,impactColor);
+  }
+  function beginReload(){if(armory?.spec.melee)return;if(armory?.current==='grenade'){notice('手榴彈用完請到商城購買');return;}if(ammo===(armory?.spec.capacity||24)||reload>0||state!=='playing')return;reload=armory?.spec.reload||1.6;sound('reload');notice('正在換彈…',reload);}
+  $('start').disabled=false;$('start').textContent='進入海岸 →';hud();
+  $('start').onclick=()=>{unlockAudio();if(state==='ready'||state==='dead'||state==='won')restart();renderer.domElement.requestPointerLock?.();};
+  document.addEventListener('pointerlockchange',()=>{locked=document.pointerLockElement===renderer.domElement;keys.clear();trigger=false;aiming=false;if(locked){$('overlay').style.display='none';}else if(settings?.opened||armory?.opened||fishing?.bookOpen){document.getElementById('overlay').style.display='none';}else if(state==='playing'){if(settings){settings.open();return;}$('overlay').style.display='grid';$('heading').textContent='行動暫停';$('description').textContent='點擊繼續行動，重新鎖定滑鼠。';$('start').textContent='繼續行動 →';}});
+  document.addEventListener('pointerlockerror',()=>{report('滑鼠鎖定','瀏覽器未允許，請再次點擊開始或使用桌面 Chrome / Edge');$('overlay').style.display='grid';});
+  document.addEventListener('mousemove',e=>{if(!locked)return;yaw-=e.movementX*.0022*(settings?.data.sensitivity??1);pitch=T.MathUtils.clamp(pitch-e.movementY*.0022*(settings?.data.sensitivity??1),-1.48,1.48);});
+  document.addEventListener('keydown',e=>{if(e.code==='Escape'&&!locked&&settings){if(settings.opened)settings.close();else settings.open();return;}if(settings?.opened)return;if(['Space','KeyB','ControlLeft','ControlRight'].includes(e.code))e.preventDefault();if(e.code==='KeyB'&&!e.repeat){debug=!debug;player.vy=0;boxes.visible=debug;$('debug').style.display=debug?'block':'none';notice(debug?'調試飛行 ON · SPACE 上升 / CTRL 下降':'調試飛行 OFF · 恢復重力');}if(e.code==='KeyI'&&!e.repeat&&state==='playing'){fishing?.toggleBook();return;}if(e.code==='KeyM'&&!e.repeat&&state==='playing'){if(armory?.opened)armory.close();else if(shops.some(m=>m.shopPosition().distanceTo(player.pos)<4))armory?.open();else notice('請進入左側武器店，再按 M 購買');return;}if(!locked)return;keys.add(e.code);if(e.code==='KeyT'&&!e.repeat){if(mounted||riding)notice('先下坐騎或下電車');else fishing?.sit();}if(!e.repeat&&['Digit2','Digit3','Digit4'].includes(e.code))selectWeapon({Digit2:'rifle',Digit3:'pistol',Digit4:'grenade'}[e.code]);if(e.code==='KeyX'&&!e.repeat&&riding){const seated=riding.toggleSeat();player.pos.copy(riding.ridePosition());player.vy=0;notice(seated?'已坐下 · X 站起':'已站起 · WASD 車內移動');}if(e.code==='KeyR')beginReload();if(e.code==='KeyV'&&!e.repeat){third=!third;syncCamera();notice(third?'第三人稱':'第一人稱');}if(e.code==='KeyE'&&!e.repeat){if(!petters.some(m=>m.harvest?.()))items?.use();}if(e.code==='KeyH'&&!e.repeat)petters[0]?.feed?.();if(e.code==='Digit1'&&!e.repeat&&!fishing?.toggle()){const animal=petters.find(m=>m.petPosition().distanceTo(player.pos)<2&&clear(player.pos.clone().add(new T.Vector3(0,1,0)),m.petPosition().add(new T.Vector3(0,.7,0))));if(animal)animal.pet();else notice('靠近動物按 1 摸摸');}
+    if(e.code==='KeyQ'&&!e.repeat){const near=interactions.map(model=>({model,d:model.interactPosition().distanceTo(player.pos.clone().add(new T.Vector3(0,1,0)))})).sort((a,b)=>a.d-b.d)[0];if(near?.d<2.6)notice(near.model.interact());}
+    if(e.code==='KeyG'&&!e.repeat){if(fishing?.seated){notice('先按 T 站起');return;}if(mounted){player.pos.copy(mounted.exitPosition());mounted.release();mounted=null;notice('已下坐騎');}else{const park=petters.find(m=>m.petPosition().distanceTo(player.pos)<2&&clear(player.pos.clone().add(new T.Vector3(0,1,0)),m.petPosition().add(new T.Vector3(0,.7,0))));if(park?.mount){mounted=park.mount();riding=null;notice('已騎乘 · SPACE 跳躍 · SHIFT 衝刺 · G 下坐騎');}}}if(e.code==='KeyF'&&!e.repeat){if(fishing?.seated){notice('先按 T 站起');return;}if(mounted){notice('先按 G 下坐騎');return;}if(riding){player.pos.copy(riding.exitPosition());riding=null;player.vy=0;notice('已下車');}else{const train=vehicles.find(v=>v.canBoard(player.pos));if(train){riding=train;train.board?.();rideYaw=train.root.rotation.y;player.pos.copy(train.ridePosition());notice('已上車 · WASD 車內移動 · X 坐下／站起 · F 下車');}else notice('靠近電車側面後按 F 上車');}}if(e.code==='Space'&&!e.repeat&&mounted&&!debug)mounted.jump();if(e.code==='Space'&&!e.repeat&&player.grounded&&!debug&&!mounted&&!riding&&!fishing?.seated){player.vy=7.8;player.grounded=false;}});
+  document.addEventListener('keyup',e=>keys.delete(e.code));document.addEventListener('mousedown',e=>{if(!locked)return;if(fishing?.down(e.button))return;if(e.button===0){trigger=true;shoot();}if(e.button===2)aiming=true;});document.addEventListener('mouseup',e=>{if(locked&&fishing?.up(e.button))return;if(e.button===0)trigger=false;if(e.button===2)aiming=false;});renderer.domElement.addEventListener('contextmenu',e=>e.preventDefault());window.addEventListener('blur',()=>{keys.clear();trigger=false;aiming=false;if(locked)document.exitPointerLock?.();});
+  window.addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight);});
+  if(window.FPSBlast)try{blast=new FPSBlast(T,scene);}catch(e){report('爆炸效果',e);}
+  if(window.FPSProgress)try{progress=new FPSProgress({active:()=>state==='playing'||state==='respawning',notice,snapshot(){return {catches:fishing?.catches||{},weapons:armory?Object.fromEntries(Object.entries(armory.catalog).map(([id,w])=>[id,{owned:w.owned,ammo:id===armory.current?ammo:w.ammo}])):{rifle:{owned:true,ammo}},coins:armory?.coins||0,kills,character:characters?.selected||0,current:armory?.current||'rifle',grass:petters[0]?.saveState?.().grass||0,third};},preview(data){if(characters){characters.selected=data.character;characters.refresh();}$('start').textContent='繼續海岸旅程 →';},restore(data){if(fishing)fishing.catches={...data.catches};kills=data.kills;third=data.third;if(characters){characters.selected=data.character;characters.refresh();if(avatar){scene.remove(avatar.root);avatar.root.traverse(o=>{o.geometry?.dispose();o.material?.dispose();});}avatar=FPSModels.player(T,characters.character);scene.add(avatar.root);}petters[0]?.loadState?.({grass:data.grass});if(armory){armory.coins=data.coins;for(const [id,w]of Object.entries(data.weapons))Object.assign(armory.catalog[id],w);ammo=armory.spec.ammo;selectWeapon(data.current);armory.refresh();}syncCamera();hud();}});if(progress.data){characters&&(characters.selected=progress.data.character,characters.refresh());$('start').textContent='繼續海岸旅程 →';}}catch(e){report('存檔系統',e);}
+  if(window.FPSSettings)try{settings=new FPSSettings({pause(){keys.clear();trigger=aiming=false;document.exitPointerLock?.();$('overlay').style.display='none';},resume(){if(state==='playing')renderer.domElement.requestPointerLock?.();else $('overlay').style.display='grid';},apply(data){if(audioMaster)audioMaster.gain.value=.38*data.volume;renderer.setPixelRatio(Math.min(devicePixelRatio,{low:1,balanced:1.5,high:2}[data.quality]));renderer.shadowMap.enabled=data.quality!=='low';renderer.shadowMap.needsUpdate=true;}});}catch(e){report('設定面板',e);}
+  if(settings&&progress)progress.attach(settings.panel);
+  camera.position.copy(player.pos).add(new T.Vector3(0,1.65,0));camera.rotation.set(pitch,yaw,0);
+  let last=performance.now(),systemFailed=false;
+  function frame(now){requestAnimationFrame(frame);const dt=Math.min((now-last)/1000,.05);last=now;
+    try{
+      if(state==='respawning'){respawnTimer-=dt;document.getElementById('description').textContent=Math.max(0,Math.ceil(respawnTimer))+' 秒後重生，裝備與場景進度保留。';if(respawnTimer<=0)revivePlayer();}
+      visualTime+=dt;for(const model of modelUpdates){if(model.failed)continue;try{model.update(visualTime,dt,camera,state==='playing'&&locked);}catch(e){model.failed=true;report('模型動畫 '+model.id,e);}}
+      for(const o of obstacles)if(o.dynamic){o.root.updateMatrixWorld(true);o.matrix.copy(o.root.matrixWorld);o.inverse.copy(o.matrix).invert();o.localBox.setFromCenterAndSize(new T.Vector3().fromArray(o.shape.offset||[0,0,0]),new T.Vector3().fromArray(o.shape.size));o.box.copy(o.localBox).applyMatrix4(o.matrix);}
+      if(riding){yaw+=riding.root.rotation.y-rideYaw;rideYaw=riding.root.rotation.y;player.pos.copy(riding.ridePosition());player.vy=0;}
+      frames++;fpsTime+=dt;if(fpsTime>=.5){fps=Math.round(frames/fpsTime);frames=0;fpsTime=0;}
+      if(state==='playing'&&locked){if(armory)try{armory.update(dt);}catch(e){report('武器更新',e);armory=null;}elapsed+=dt;const forward=new T.Vector3(-Math.sin(yaw)*(debug?Math.cos(pitch):1),debug?Math.sin(pitch):0,-Math.cos(yaw)*(debug?Math.cos(pitch):1)),right=new T.Vector3(Math.cos(yaw),0,-Math.sin(yaw));const movement=new T.Vector3();if(keys.has('KeyW'))movement.add(forward);if(keys.has('KeyS'))movement.sub(forward);if(keys.has('KeyD'))movement.add(right);if(keys.has('KeyA'))movement.sub(right);
+        if(debug){if(keys.has('Space'))movement.y+=1;if(keys.has('ControlLeft')||keys.has('ControlRight'))movement.y-=1;player.vy=0;}
+        movement.normalize().multiplyScalar(((keys.has('ShiftLeft')||keys.has('ShiftRight'))?9:debug?6:4.4)*(items?.speedMultiplier||1)*(mounted?1.45:1)*dt);if(!debug){player.vy-=18*dt;movement.y=player.vy*dt;}const landingSpeed=-player.vy,wasGrounded=player.grounded,result=fishing?.seated?{grounded:true,dx:0,dz:0}:mounted?mounted.drive(movement,yaw,dt):riding?riding.walk(movement):move(player.pos,movement,.32,1.8);if(riding&&result.position)player.pos.copy(result.position);player.grounded=result.grounded;if(result.grounded){player.vy=0;if(!debug&&!mounted&&!riding&&!wasGrounded&&landingSpeed>10){const loss=Math.ceil((landingSpeed*landingSpeed/36-2.5)*8);damage(loss);notice('高處落地 −'+loss+' HP');}}
+        syncCamera(player.grounded?Math.sin(elapsed*10)*.018*Number(Math.hypot(result.dx,result.dz)>.001):0);avatar?.animate(visualTime,Math.hypot(result.dx,result.dz)>.001,recoil,!!mounted||!!riding?.seated||!!fishing?.seated);if(avatar?.held)avatar.held.rotation.x=recoil*(armory?.spec.melee?.9:.15);if(items)try{items.update(dt);}catch(e){report("道具更新",e);items=null;}
+        if(enemySystem&&!systemFailed)try{enemySystem.update(dt);}catch(e){systemFailed=true;report('敵人系統更新',e);}
+        shotTimer=Math.max(0,shotTimer-dt);if(trigger)shoot();if(reload>0){reload=Math.max(0,reload-dt);if(reload===0){ammo=armory?.spec.capacity||24;if(armory)armory.spec.ammo=ammo;hud();}}recoil=Math.max(0,recoil-dt*7);
+      }
+      const ads=aiming&&locked&&reload===0&&!armory?.spec.melee,blend=1-Math.exp(-dt*18);const desiredFov=ads?58:72;if(Math.abs(camera.fov-desiredFov)>.01){camera.fov=T.MathUtils.lerp(camera.fov,desiredFov,blend);camera.updateProjectionMatrix();}
+      if(weapon){weapon.position.x=T.MathUtils.lerp(weapon.position.x,ads?0:.31,blend);weapon.position.y=T.MathUtils.lerp(weapon.position.y,ads?-.14:-.27,blend)+recoil*.015;weapon.position.z=(ads?-.35:-.55)+recoil*.11;weapon.rotation.x=recoil*(armory?.spec.melee?-.9:.14)+(reload>0?Math.sin(reload/1.6*Math.PI)*-.5:0);weapon.rotation.z=-recoil*.035;}
+      if(fishing)try{fishing.update(dt,state==='playing'&&locked,third);}catch(e){report('釣魚更新',e);fishing.leave();fishing=null;}
+      for(let i=effects.length-1;i>=0;i--){const e=effects[i];e.life-=dt;const age=e.max-e.life,fade=Math.max(0,e.life/e.max);
+        if(e.kind==='bullet')e.object.position.lerpVectors(e.start,e.end,Math.min(1,age/e.max));
+        else if(e.kind==='flash')e.object.scale.setScalar(.5+fade*.6);
+        else if(e.kind==='impact'){const sparks=e.object.userData.sparks,positions=sparks.geometry.attributes.position;e.object.children[0].scale.setScalar(.16+age*.3);e.object.userData.velocities.forEach((v,j)=>positions.setXYZ(j,v.x*age,v.y*age-2*age*age,v.z*age));positions.needsUpdate=true;}
+        e.object.traverse(o=>{if(o.material)o.material.opacity=e.kind==='bullet'?Math.max(.5,fade):fade;});
+        if(e.life<=0){effects.splice(i,1);disposeEffect(e);if(e.kind==='bullet'&&e.normal)impact(e.end,e.normal,e.impactColor);}}
+      hitTimer=Math.max(0,hitTimer-dt);$('cross').classList.toggle('hit',hitTimer>0);
+      for(let i=hitDirections.length-1;i>=0;i--){const h=hitDirections[i];h.life-=dt;const delta=h.source.clone().sub(player.pos),right=delta.x*Math.cos(yaw)-delta.z*Math.sin(yaw),front=-delta.x*Math.sin(yaw)-delta.z*Math.cos(yaw);h.node.style.transform='rotate('+Math.atan2(right,front)+'rad)';h.node.style.opacity=Math.min(1,Math.max(0,h.life/.4));if(h.life<=0){h.node.remove();hitDirections.splice(i,1);}}
+      noticeTimer-=dt;if(noticeTimer<=0)$('notice').textContent='';
+      hitFeedbackTimer=Math.max(0,hitFeedbackTimer-dt);$('hit-feedback').style.opacity=Math.min(1,hitFeedbackTimer/.4);
+      // Render-only kick: aim input and shot hit tests keep their stable center ray.
+      hitShake=Math.max(0,hitShake-dt);if(state==='playing'&&locked&&hitShake>0){const strength=hitShake/.24;camera.rotation.x+=Math.sin((.24-hitShake)*38)*.014*strength;camera.rotation.z=hitKick*.018*strength;}else camera.rotation.z=0;
+      if(debug){for(const w of enemyWires){const p=w.u.model.root.position;w.helper.visible=!w.u.dead&&!w.u.failed;w.box.set(new T.Vector3(p.x-.4,p.y,p.z-.4),new T.Vector3(p.x+.4,p.y+1.95,p.z+.4));}$('debug').textContent='FPS '+fps+' / THREE r'+T.REVISION+'\n位置 '+player.pos.toArray().map(v=>v.toFixed(2)).join(', ')+'\n碰撞 '+obstacles.length+' / 敵人 '+(enemySystem?.units.filter(u=>!u.dead&&!u.failed).length||0)+'\n自由飛行 ON · 穿牆 OFF\nSPACE 上升 / CTRL 下降\n綠：場景 / 橙：敵人\n渲染 '+renderer.info.render.calls+' calls';}
+      if(blast)try{blast.update(state==='playing'&&locked?dt:0);}catch(e){report('爆炸動畫',e);blast=null;}
+      renderer.render(scene,camera);
+    }catch(e){if(!frame.reported){frame.reported=true;report('主循環',e);}}
+  }
+  requestAnimationFrame(frame);
+  // Read-only diagnostics used for validation; never needed to play.
+  window.FPSDiagnostics={scene,camera,renderer,player,move,clear,obstacles,enemySystem,get state(){return state;},get total(){return total;},get kills(){return kills;}};
+}
+</script></body></html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
